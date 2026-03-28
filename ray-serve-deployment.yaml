@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"ray-serve","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"ray-serve"}},"template":{"metadata":{"labels":{"app":"ray-serve"}},"spec":{"containers":[{"args":["pip install transformers accelerate -q \u0026\u0026\npython -c \"\nimport ray\nfrom ray import serve\nfrom transformers import pipeline\nfrom starlette.requests import Request\nimport os\n\nray.init(dashboard_host='0.0.0.0')\n\n@serve.deployment\nclass TinyLlamaDeployment:\n    def __init__(self):\n        self.pipe = pipeline('text-generation', model='TinyLlama/TinyLlama-1.1B-Chat-v1.0', max_new_tokens=100)\n    async def __call__(self, request: Request):\n        data = await request.json()\n        result = self.pipe(data['prompt'])\n        return {'generated_text': result[0]['generated_text']}\n\nserve.start(http_options={'host': '0.0.0.0', 'port': 8000})\nserve.run(TinyLlamaDeployment.bind())\nimport time\nwhile True:\n    time.sleep(10)\n\"\n"],"command":["/bin/sh","-c"],"image":"rayproject/ray:latest","name":"ray-serve","ports":[{"containerPort":8000}],"resources":{"limits":{"cpu":"4000m","memory":"12Gi"},"requests":{"cpu":"2000m","memory":"6Gi"}}}]}}}}
+  creationTimestamp: "2026-03-28T03:03:51Z"
+  generation: 3
+  name: ray-serve
+  namespace: default
+  resourceVersion: "145374"
+  uid: ab34fff1-bcb6-44cd-acef-6f063f20583e
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ray-serve
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ray-serve
+    spec:
+      containers:
+      - args:
+        - |
+          pip install transformers accelerate -q &&
+          python -c "
+          import ray
+          from ray import serve
+          from transformers import pipeline
+          from starlette.requests import Request
+          import os
+
+          ray.init(dashboard_host='0.0.0.0')
+
+          @serve.deployment
+          class TinyLlamaDeployment:
+              def __init__(self):
+                  self.pipe = pipeline('text-generation', model='TinyLlama/TinyLlama-1.1B-Chat-v1.0', max_new_tokens=100)
+              async def __call__(self, request: Request):
+                  data = await request.json()
+                  result = self.pipe(data['prompt'])
+                  return {'generated_text': result[0]['generated_text']}
+
+          serve.start(http_options={'host': '0.0.0.0', 'port': 8000})
+          serve.run(TinyLlamaDeployment.bind())
+          import time
+          while True:
+              time.sleep(10)
+          "
+        command:
+        - /bin/sh
+        - -c
+        image: rayproject/ray:latest
+        imagePullPolicy: Always
+        name: ray-serve
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "4"
+            memory: 12Gi
+          requests:
+            cpu: "2"
+            memory: 6Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-03-28T03:03:51Z"
+    lastUpdateTime: "2026-03-28T03:03:52Z"
+    message: ReplicaSet "ray-serve-7b85996445" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-03-28T05:47:04Z"
+    lastUpdateTime: "2026-03-28T05:47:04Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 3
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

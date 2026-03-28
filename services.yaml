@@ -1,0 +1,92 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"ollama-svc","namespace":"default"},"spec":{"ports":[{"port":80,"targetPort":11434}],"selector":{"app":"ollama"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-27T08:37:07Z"
+    name: ollama-svc
+    namespace: default
+    resourceVersion: "24053"
+    uid: a75158c6-2c51-4a46-abdf-617ac3420267
+  spec:
+    clusterIP: 10.101.238.82
+    clusterIPs:
+    - 10.101.238.82
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 11434
+    selector:
+      app: ollama
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"vllm-svc","namespace":"default"},"spec":{"ports":[{"port":80,"targetPort":8000}],"selector":{"app":"vllm"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-28T02:28:26Z"
+    name: vllm-svc
+    namespace: default
+    resourceVersion: "126483"
+    uid: 746d2a16-a3b0-41b4-b231-a85cc81d2a0b
+  spec:
+    clusterIP: 10.106.25.110
+    clusterIPs:
+    - 10.106.25.110
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: vllm
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"ray-serve-svc","namespace":"default"},"spec":{"ports":[{"port":80,"targetPort":8000}],"selector":{"app":"ray-serve"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-28T03:03:51Z"
+    name: ray-serve-svc
+    namespace: default
+    resourceVersion: "129864"
+    uid: 64a60433-6f6f-4470-84bb-28764c2b3717
+  spec:
+    clusterIP: 10.111.54.211
+    clusterIPs:
+    - 10.111.54.211
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: ray-serve
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""
